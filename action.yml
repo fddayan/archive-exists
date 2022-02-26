@@ -1,6 +1,9 @@
 name: 'Archive exists'
 description: 'Provide a description here'
 author: 'fddayan'
+branding:
+  icon: 'alert-triangle'  
+  color: 'green'
 inputs:
   artifactName:
     required: true
