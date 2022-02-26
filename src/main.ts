@@ -22,7 +22,8 @@ async function run(): Promise<void> {
       }
     )
 
-    core.debug(artifacts.data)
+    core.info('Artifacts found:')
+    core.info(artifacts.data)
 
     if (artifacts.data && artifacts.data.artifacts) {
       const regex = new RegExp(artifactName)
