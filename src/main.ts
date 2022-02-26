@@ -34,6 +34,7 @@ async function run(): Promise<void> {
 
       core.setOutput('artifacts_found_length', artifactsFound.length)
       core.setOutput('artifacts_found', artifactsFound.length > 0)
+      core.setOutput('artifacts_data', JSON.stringify(artifacts.data))
     }
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
