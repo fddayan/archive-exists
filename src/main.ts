@@ -25,9 +25,10 @@ async function run(): Promise<void> {
     core.debug(artifacts.data)
 
     if (artifacts.data && artifacts.data.artifacts) {
+      const regex = new RegExp(artifactName)
       const artifactsFound = artifacts.data.artifacts.filter(
         (a: {name: string; expired: boolean}) =>
-          a.name.match(artifactName) && !a.expired
+          a.name.match(regex) && !a.expired
       )
 
       core.setOutput('artifacts_found_length', artifactsFound.length)
