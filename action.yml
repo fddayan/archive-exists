@@ -1,11 +1,10 @@
-name: 'Your name here'
+name: 'Archive exists'
 description: 'Provide a description here'
-author: 'Your name or organization here'
+author: 'fddayan'
 inputs:
-  milliseconds: # change this
+  artifactName:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'The artifact name to check. It could be a regex expression.'
 runs:
   using: 'node12'
   main: 'dist/index.js'
