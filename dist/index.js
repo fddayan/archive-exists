@@ -100,11 +100,13 @@ function run() {
                 core.setOutput('artifactsFound', artifactsFound.length > 0);
                 core.setOutput('artifactsData', JSON.stringify(artifactsFound));
                 const latestArtifact = artifactsFound[0];
-                core.setOutput('artifactDownloadUrl', latestArtifact.archive_download_url);
+                if (latestArtifact) {
+                    core.setOutput('artifactDownloadUrl', latestArtifact.archive_download_url);
+                }
             }
             else {
-                core.setOutput('artifacts_found_length', 0);
-                core.setOutput('artifacts_found', false);
+                core.setOutput('artifactsFoundLength', 0);
+                core.setOutput('artifactsFound', false);
             }
         }
         catch (error) {
