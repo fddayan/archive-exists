@@ -1,6 +1,8 @@
+import * as artifact from '@actions/artifact'
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import {artifactName, githubToken, repo} from './config'
+import {artifactName, download, downloadTo, githubToken, repo} from './config'
+import moment from 'moment'
 
 async function run(): Promise<void> {
   try {
@@ -27,17 +29,36 @@ async function run(): Promise<void> {
 
     if (artifacts.data && artifacts.data.artifacts) {
       const regex = new RegExp(artifactName)
-      const artifactsFound = artifacts.data.artifacts.filter(
+      let artifactsFound = artifacts.data.artifacts.filter(
         (a: {name: string; expired: boolean}) =>
           a.name.match(regex) && !a.expired
       )
 
-      const names = artifactsFound.map((a: {name: string}) => a.name).join(',')
+      // const names = artifactsFound.map((a: {name: string}) => a.name).join(',')
+
+      artifactsFound = artifactsFound.sort(
+        (a: {created_at: string}, b: {created_at: string}) =>
+          moment(b.created_at).diff(moment(a.created_at).format('YYYYMMDD'))
+      )
 
       core.setOutput('artifacts_found_length', artifactsFound.length)
       core.setOutput('artifacts_found', artifactsFound.length > 0)
-      core.setOutput('artifacts_data', JSON.stringify(artifacts.data))
-      core.setOutput('artifacts_names', names)
+      core.setOutput('artifacts_data', JSON.stringify(artifactsFound))
+
+      if (download) {
+        const latestArtifact = artifactsFound[0]
+        const artifactClient = artifact.create()
+        const options = {
+          createArtifactFolder: false
+        }
+        const downloadResponse = await artifactClient.downloadArtifact(
+          latestArtifact.name,
+          downloadTo,
+          options
+        )
+        core.setOutput('artifactName', downloadResponse.artifactName)
+        core.setOutput('downloadPath', downloadResponse.downloadPath)
+      }
     } else {
       core.setOutput('artifacts_found_length', 0)
       core.setOutput('artifacts_found', false)
