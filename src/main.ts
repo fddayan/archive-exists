@@ -47,12 +47,20 @@ async function run(): Promise<void> {
 
       if (download) {
         const latestArtifact = artifactsFound[0]
-        const artifactUrl = latestArtifact.url.replace(
+        const artifactUrl = latestArtifact.archive_download_url.replace(
           'https://api.github.com',
           ''
         )
 
-        const downloadDate = await octokit.request(`GET ${artifactUrl}`)
+        core.warning('Artifact info')
+        core.warning(artifactUrl)
+
+        const downloadDate = await octokit.request(`GET ${artifactUrl}`, {
+          owner: repo.owner,
+          repo: repo.repo,
+          artifact_id: latestArtifact.id,
+          archive_format: 'zip'
+        })
 
         core.warning(downloadDate.data)
 

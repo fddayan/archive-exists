@@ -112,8 +112,15 @@ function run() {
                 core.setOutput('artifacts_data', JSON.stringify(artifactsFound));
                 if (config_1.download) {
                     const latestArtifact = artifactsFound[0];
-                    const artifactUrl = latestArtifact.url.replace('https://api.github.com', '');
-                    const downloadDate = yield octokit.request(`GET ${artifactUrl}`);
+                    const artifactUrl = latestArtifact.archive_download_url.replace('https://api.github.com', '');
+                    core.warning('Artifact info');
+                    core.warning(artifactUrl);
+                    const downloadDate = yield octokit.request(`GET ${artifactUrl}`, {
+                        owner: config_1.repo.owner,
+                        repo: config_1.repo.repo,
+                        artifact_id: latestArtifact.id,
+                        archive_format: 'zip'
+                    });
                     core.warning(downloadDate.data);
                     const artifactClient = artifact.create();
                     const options = {
