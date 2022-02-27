@@ -47,6 +47,15 @@ async function run(): Promise<void> {
 
       if (download) {
         const latestArtifact = artifactsFound[0]
+        const artifactUrl = latestArtifact.url.replace(
+          'https://api.github.com',
+          ''
+        )
+
+        const downloadDate = await octokit.request(`GET ${artifactUrl}`)
+
+        core.warning(downloadDate.data)
+
         const artifactClient = artifact.create()
         const options = {
           createArtifactFolder: false
