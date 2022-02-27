@@ -14,8 +14,12 @@ inputs:
     required: false
   ```
 
-  Outputs
-  * artifactsFoundLength
-  * artifactsFound
-  * artifactsData
-  * artifactDownloadUrl
+Inputs:
+* artifactName
+* GITHUB_TOKEN (default ${{ github.token }})
+
+Outputs
+* artifactsFoundLength
+* artifactsFound
+* artifactsData
+* artifactDownloadUrl
