@@ -1,7 +1,7 @@
-import * as artifact from '@actions/artifact'
+// import * as artifact from '@actions/artifact'
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import {artifactName, download, downloadTo, githubToken, repo} from './config'
+import {artifactName, download, githubToken, repo} from './config'
 import moment from 'moment'
 
 async function run(): Promise<void> {
@@ -64,17 +64,17 @@ async function run(): Promise<void> {
 
         core.warning(downloadDate.data)
 
-        const artifactClient = artifact.create()
-        const options = {
-          createArtifactFolder: false
-        }
-        const downloadResponse = await artifactClient.downloadArtifact(
-          latestArtifact.name,
-          downloadTo,
-          options
-        )
-        core.setOutput('artifactName', downloadResponse.artifactName)
-        core.setOutput('downloadPath', downloadResponse.downloadPath)
+        // const artifactClient = artifact.create()
+        // const options = {
+        //   createArtifactFolder: false
+        // }
+        // const downloadResponse = await artifactClient.downloadArtifact(
+        //   latestArtifact.name,
+        //   downloadTo,
+        //   options
+        // )
+        // core.setOutput('artifactName', downloadResponse.artifactName)
+        // core.setOutput('downloadPath', downloadResponse.downloadPath)
       }
     } else {
       core.setOutput('artifacts_found_length', 0)
