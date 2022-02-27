@@ -53,6 +53,7 @@ async function run(): Promise<void> {
         )
 
         core.warning('Artifact info')
+        core.warning(latestArtifact)
         core.warning(artifactUrl)
 
         const downloadDate = await octokit.request(`GET ${artifactUrl}`, {

@@ -114,6 +114,7 @@ function run() {
                     const latestArtifact = artifactsFound[0];
                     const artifactUrl = latestArtifact.archive_download_url.replace('https://api.github.com', '');
                     core.warning('Artifact info');
+                    core.warning(latestArtifact);
                     core.warning(artifactUrl);
                     const downloadDate = yield octokit.request(`GET ${artifactUrl}`, {
                         owner: config_1.repo.owner,
