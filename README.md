@@ -8,12 +8,6 @@ inputs:
   artifactName:
     required: true
     description: 'The artifact name to check. It could be a regex expression.'
-  download:
-    required: false
-    description: 'Should download the artifact'
-  downloadTo:
-    required: false
-    description: 'Where should download the artifact'
   GITHUB_TOKEN:
     description: 'The GitHub access token (e.g. secrets.GITHUB_TOKEN) used to create or update the comment. This defaults to {{ github.token }}.'
     default: '${{ github.token }}'

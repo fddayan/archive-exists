@@ -26,13 +26,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.repo = exports.downloadTo = exports.download = exports.githubToken = exports.artifactName = void 0;
+exports.repo = exports.githubToken = exports.artifactName = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github_1 = __nccwpck_require__(5438);
 exports.artifactName = core.getInput('artifactName', { required: true });
 exports.githubToken = core.getInput('GITHUB_TOKEN', { required: true });
-exports.download = core.getInput('GITHUB_TOKEN', { required: false });
-exports.downloadTo = core.getInput('GITHUB_TOKEN', { required: false });
 exports.repo = buildRepo();
 function buildRepo() {
     return {
@@ -98,20 +96,11 @@ function run() {
                 const regex = new RegExp(config_1.artifactName);
                 let artifactsFound = artifacts.data.artifacts.filter((a) => a.name.match(regex) && !a.expired);
                 artifactsFound = artifactsFound.sort((a, b) => (0, moment_1.default)(b.created_at).diff((0, moment_1.default)(a.created_at).format('YYYYMMDD')));
-                core.setOutput('artifacts_found_length', artifactsFound.length);
-                core.setOutput('artifacts_found', artifactsFound.length > 0);
-                core.setOutput('artifacts_data', JSON.stringify(artifactsFound));
-                if (config_1.download) {
-                    const latestArtifact = artifactsFound[0];
-                    const artifactUrl = latestArtifact.archive_download_url.replace('https://api.github.com', '');
-                    yield octokit.request(`GET ${artifactUrl}`, {
-                        owner: config_1.repo.owner,
-                        repo: config_1.repo.repo,
-                        artifact_id: latestArtifact.id,
-                        archive_format: 'zip'
-                    });
-                    core.setOutput('artifactDownloadUrl', latestArtifact.archive_download_url);
-                }
+                core.setOutput('artifactsFoundLength', artifactsFound.length);
+                core.setOutput('artifactsFound', artifactsFound.length > 0);
+                core.setOutput('artifactsData', JSON.stringify(artifactsFound));
+                const latestArtifact = artifactsFound[0];
+                core.setOutput('artifactDownloadUrl', latestArtifact.archive_download_url);
             }
             else {
                 core.setOutput('artifacts_found_length', 0);

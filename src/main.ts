@@ -1,7 +1,7 @@
 // import * as artifact from '@actions/artifact'
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import {artifactName, download, githubToken, repo} from './config'
+import {artifactName, githubToken, repo} from './config'
 import moment from 'moment'
 
 async function run(): Promise<void> {
@@ -31,25 +31,9 @@ async function run(): Promise<void> {
       core.setOutput('artifactsFound', artifactsFound.length > 0)
       core.setOutput('artifactsData', JSON.stringify(artifactsFound))
 
-      if (download) {
-        const latestArtifact = artifactsFound[0]
-        const artifactUrl = latestArtifact.archive_download_url.replace(
-          'https://api.github.com',
-          ''
-        )
+      const latestArtifact = artifactsFound[0]
 
-        await octokit.request(`GET ${artifactUrl}`, {
-          owner: repo.owner,
-          repo: repo.repo,
-          artifact_id: latestArtifact.id,
-          archive_format: 'zip'
-        })
-
-        core.setOutput(
-          'artifactDownloadUrl',
-          latestArtifact.archive_download_url
-        )
-      }
+      core.setOutput('artifactDownloadUrl', latestArtifact.archive_download_url)
     } else {
       core.setOutput('artifacts_found_length', 0)
       core.setOutput('artifacts_found', false)
