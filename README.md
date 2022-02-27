@@ -21,7 +21,7 @@ inputs:
   ```
 
   Outputs
-  * artifacts_found_length
-  * artifacts_found
-  * artifacts_data
+  * artifactsFoundLength
+  * artifactsFound
+  * artifactsData
   * artifactDownloadUrl

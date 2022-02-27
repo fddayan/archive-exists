@@ -27,9 +27,9 @@ async function run(): Promise<void> {
           moment(b.created_at).diff(moment(a.created_at).format('YYYYMMDD'))
       )
 
-      core.setOutput('artifacts_found_length', artifactsFound.length)
-      core.setOutput('artifacts_found', artifactsFound.length > 0)
-      core.setOutput('artifacts_data', JSON.stringify(artifactsFound))
+      core.setOutput('artifactsFoundLength', artifactsFound.length)
+      core.setOutput('artifactsFound', artifactsFound.length > 0)
+      core.setOutput('artifactsData', JSON.stringify(artifactsFound))
 
       if (download) {
         const latestArtifact = artifactsFound[0]
