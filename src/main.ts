@@ -32,9 +32,12 @@ async function run(): Promise<void> {
           a.name.match(regex) && !a.expired
       )
 
+      const names = artifactsFound.map((a: {name: string}) => a.name).join(',')
+
       core.setOutput('artifacts_found_length', artifactsFound.length)
       core.setOutput('artifacts_found', artifactsFound.length > 0)
       core.setOutput('artifacts_data', JSON.stringify(artifacts.data))
+      core.setOutput('artifacts_names', names)
     } else {
       core.setOutput('artifacts_found_length', 0)
       core.setOutput('artifacts_found', false)
