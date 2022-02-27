@@ -22,8 +22,8 @@ async function run(): Promise<void> {
       }
     )
 
-    core.info('Artifacts found:')
-    core.info(artifacts.data)
+    core.warning('Artifacts found:')
+    core.warning(artifacts.data)
 
     if (artifacts.data && artifacts.data.artifacts) {
       const regex = new RegExp(artifactName)
@@ -35,6 +35,9 @@ async function run(): Promise<void> {
       core.setOutput('artifacts_found_length', artifactsFound.length)
       core.setOutput('artifacts_found', artifactsFound.length > 0)
       core.setOutput('artifacts_data', JSON.stringify(artifacts.data))
+    } else {
+      core.setOutput('artifacts_found_length', 0)
+      core.setOutput('artifacts_found', false)
     }
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
