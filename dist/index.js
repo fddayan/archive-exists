@@ -112,6 +112,9 @@ function run() {
                 core.setOutput('artifacts_data', JSON.stringify(artifactsFound));
                 if (config_1.download) {
                     const latestArtifact = artifactsFound[0];
+                    const artifactUrl = latestArtifact.url.replace('https://api.github.com', '');
+                    const downloadDate = yield octokit.request(`GET ${artifactUrl}`);
+                    core.warning(downloadDate.data);
                     const artifactClient = artifact.create();
                     const options = {
                         createArtifactFolder: false
