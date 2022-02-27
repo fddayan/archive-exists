@@ -89,23 +89,14 @@ const moment_1 = __importDefault(__nccwpck_require__(9623));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            // const ms: string = core.getInput('milliseconds')
-            // core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
-            // core.debug(new Date().toTimeString())
-            // await wait(parseInt(ms, 10))
-            // core.debug(new Date().toTimeString())
-            // core.setOutput('time', new Date().toTimeString())
             const octokit = github.getOctokit(config_1.githubToken);
             const artifacts = yield octokit.request(`GET /repos/${config_1.repo.owner}/${config_1.repo.repo}/actions/artifacts`, {
                 owner: config_1.repo.owner,
                 repo: config_1.repo.repo
             });
-            core.warning('Artifacts found:');
-            core.warning(artifacts.data);
             if (artifacts.data && artifacts.data.artifacts) {
                 const regex = new RegExp(config_1.artifactName);
                 let artifactsFound = artifacts.data.artifacts.filter((a) => a.name.match(regex) && !a.expired);
-                // const names = artifactsFound.map((a: {name: string}) => a.name).join(',')
                 artifactsFound = artifactsFound.sort((a, b) => (0, moment_1.default)(b.created_at).diff((0, moment_1.default)(a.created_at).format('YYYYMMDD')));
                 core.setOutput('artifacts_found_length', artifactsFound.length);
                 core.setOutput('artifacts_found', artifactsFound.length > 0);
@@ -113,28 +104,13 @@ function run() {
                 if (config_1.download) {
                     const latestArtifact = artifactsFound[0];
                     const artifactUrl = latestArtifact.archive_download_url.replace('https://api.github.com', '');
-                    core.warning('Artifact info');
-                    core.warning(latestArtifact);
-                    core.warning(artifactUrl);
-                    const downloadDate = yield octokit.request(`GET ${artifactUrl}`, {
+                    yield octokit.request(`GET ${artifactUrl}`, {
                         owner: config_1.repo.owner,
                         repo: config_1.repo.repo,
                         artifact_id: latestArtifact.id,
                         archive_format: 'zip'
                     });
-                    core.warning(downloadDate.data);
                     core.setOutput('artifactDownloadUrl', latestArtifact.archive_download_url);
-                    // const artifactClient = artifact.create()
-                    // const options = {
-                    //   createArtifactFolder: false
-                    // }
-                    // const downloadResponse = await artifactClient.downloadArtifact(
-                    //   latestArtifact.name,
-                    //   downloadTo,
-                    //   options
-                    // )
-                    // core.setOutput('artifactName', downloadResponse.artifactName)
-                    // core.setOutput('downloadPath', downloadResponse.downloadPath)
                 }
             }
             else {

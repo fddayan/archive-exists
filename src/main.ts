@@ -6,15 +6,6 @@ import moment from 'moment'
 
 async function run(): Promise<void> {
   try {
-    // const ms: string = core.getInput('milliseconds')
-    // core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
-
-    // core.debug(new Date().toTimeString())
-    // await wait(parseInt(ms, 10))
-    // core.debug(new Date().toTimeString())
-
-    // core.setOutput('time', new Date().toTimeString())
-
     const octokit = github.getOctokit(githubToken)
     const artifacts = await octokit.request(
       `GET /repos/${repo.owner}/${repo.repo}/actions/artifacts`,
@@ -24,17 +15,12 @@ async function run(): Promise<void> {
       }
     )
 
-    core.warning('Artifacts found:')
-    core.warning(artifacts.data)
-
     if (artifacts.data && artifacts.data.artifacts) {
       const regex = new RegExp(artifactName)
       let artifactsFound = artifacts.data.artifacts.filter(
         (a: {name: string; expired: boolean}) =>
           a.name.match(regex) && !a.expired
       )
-
-      // const names = artifactsFound.map((a: {name: string}) => a.name).join(',')
 
       artifactsFound = artifactsFound.sort(
         (a: {created_at: string}, b: {created_at: string}) =>
@@ -52,35 +38,17 @@ async function run(): Promise<void> {
           ''
         )
 
-        core.warning('Artifact info')
-        core.warning(latestArtifact)
-        core.warning(artifactUrl)
-
-        const downloadDate = await octokit.request(`GET ${artifactUrl}`, {
+        await octokit.request(`GET ${artifactUrl}`, {
           owner: repo.owner,
           repo: repo.repo,
           artifact_id: latestArtifact.id,
           archive_format: 'zip'
         })
 
-        core.warning(downloadDate.data)
-
         core.setOutput(
           'artifactDownloadUrl',
           latestArtifact.archive_download_url
         )
-
-        // const artifactClient = artifact.create()
-        // const options = {
-        //   createArtifactFolder: false
-        // }
-        // const downloadResponse = await artifactClient.downloadArtifact(
-        //   latestArtifact.name,
-        //   downloadTo,
-        //   options
-        // )
-        // core.setOutput('artifactName', downloadResponse.artifactName)
-        // core.setOutput('downloadPath', downloadResponse.downloadPath)
       }
     } else {
       core.setOutput('artifacts_found_length', 0)
