@@ -123,6 +123,7 @@ function run() {
                         archive_format: 'zip'
                     });
                     core.warning(downloadDate.data);
+                    core.setOutput('artifactDownloadUrl', latestArtifact.archive_download_url);
                     // const artifactClient = artifact.create()
                     // const options = {
                     //   createArtifactFolder: false

@@ -65,6 +65,11 @@ async function run(): Promise<void> {
 
         core.warning(downloadDate.data)
 
+        core.setOutput(
+          'artifactDownloadUrl',
+          latestArtifact.archive_download_url
+        )
+
         // const artifactClient = artifact.create()
         // const options = {
         //   createArtifactFolder: false
